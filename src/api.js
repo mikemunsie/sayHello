@@ -17,6 +17,8 @@ var config = {
 const firebaseApp = firebase.initializeApp(config);
 const databaseRef = firebaseApp.database().ref();
 const usersRef = databaseRef.child("users")
+const pendingsRef = databaseRef.child("pending")
+
 
 const globalGeoFire = new GeoFire(databaseRef.child("locations"))
 
@@ -34,11 +36,15 @@ class Api extends EventEmitter {
 		this.geoFire = globalGeoFire
 		this.geoQuery = null
 		this.usersInArea = {}
+		this.pendingRef = null
 	}
 
 
 	setCurrentUserId(userId) {
 		this.currentUserId = userId
+		this.myRef = usersRef.child(userId)
+		this.pendingRef = databaseRef.child("pending/" + userId)
+		// this.contacts = databaseRef.con
 	}
 
 	getCurrentUser() {
@@ -50,7 +56,7 @@ class Api extends EventEmitter {
 	}
 
 	createUser(user) {
-		return usersRef.push(getUserData_(user))
+		return usersRef.push(this.getUserData_(user))
 	}
 
 	updateMyUser(user) {
@@ -146,6 +152,11 @@ class Api extends EventEmitter {
 		})
 
 		return users
+	}
+
+	// request/accept api
+	requestContact(userId) {
+
 	}
 }
 
