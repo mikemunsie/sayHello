@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React, { Component } from 'react';
 import { Provider, connect } from "react-redux";
 import LinearGradient from 'react-native-linear-gradient';
@@ -12,9 +13,11 @@ var { height, width } = Dimensions.get('window');
 class ProfileComponent extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      user: this.props.user
-    }
+    this.debouncedUpdate = _.debounce(this.update, 400);
+  }
+  update(user) {
+    let { dispatch } = this.props;
+    dispatch(UserActions.saveProfile(user));
   }
   showCamera() {
     let { dispatch } = this.props;
@@ -29,14 +32,14 @@ class ProfileComponent extends Component {
       }
     }, (response) => {
       if (!response.data) return;
-      console.log(dispatch);
       dispatch(UserActions.saveProfile({
-        ...this.state.user,
+        ...this.props.user,
         pic: response.data
       }));
     });
   }
   render() {
+
     return (
       <LinearGradient colors={[colors.primary, '#F9645E']} style={[styles.container, styles.flexColumn]}>
         <TouchableHighlight
@@ -47,9 +50,9 @@ class ProfileComponent extends Component {
         >
           <View style={{flex: 1}}>
             {(() => {
-              if (this.state.user.pic) {
+              if (this.props.user.pic) {
                 return (
-                  <Image source={{uri: 'data:image/jpeg;base64,' + this.state.user.pic, isStatic: true}} style={[styles.backgroundImage, { position: "absolute", top: 0, left: 0, width: 152, borderRadius: 100, height: 152}]} />
+                  <Image source={{uri: 'data:image/jpeg;base64,' + this.props.user.pic, isStatic: true}} style={[styles.backgroundImage, { position: "absolute", top: 0, left: 0, width: 152, borderRadius: 100, height: 152}]} />
                 )
               } else {
                 return (
@@ -68,13 +71,13 @@ class ProfileComponent extends Component {
         <View style={{backgroundColor: "#fff", paddingTop: 70, paddingLeft: 30, paddingRight: 30, flex: 0, height: 340, zIndex: 4}}>
           <TextInput
             style={[styles.text, { fontFamily: "Lato-Bold", height: 50, fontSize: 20, borderColor: '#aaa', textAlign: "center", borderWidth: 1}]}
-            onChangeText={(text) => this.setState({text})}
-            defaultValue={this.state.user.name}
+            onChangeText={(text) => this.debouncedUpdate({ ...this.props.user, name: text })}
+            defaultValue={this.props.user.name}
           />
           <TextInput
             style={{height: 40, backgroundColor: "transparent", fontSize: 17, textAlign: "center", borderColor: 'gray', borderWidth: 0}}
-            onChangeText={(text) => this.setState({text})}
-            defaultValue={this.state.user.title}
+            onChangeText={(text) => this.debouncedUpdate({ ...this.props.user, title: text })}
+            defaultValue={this.props.user.title}
           />
 
           <View style={{marginTop: 10, borderBottomWidth: 1, borderBottomColor: "#ddd"}}>
@@ -82,24 +85,24 @@ class ProfileComponent extends Component {
             <TextInput
               keyboardType="numeric"
               style={{height: 40,  backgroundColor: "transparent", paddingLeft: 30, lineHeight: 40,  borderWidth: 0}}
-              onChangeText={(text) => this.setState({text})}
-              defaultValue={this.state.user.phone}
+              onChangeText={(text) => this.debouncedUpdate({ ...this.props.user, phone: text })}
+              defaultValue={this.props.user.phone}
             />
           </View>
           <View style={{marginTop: 7, borderBottomWidth: 1, borderBottomColor: "#ddd"}}>
             <Image style={{position: "absolute", top: 12}} source={require("../images/fa-envelope.png")} />
             <TextInput
               style={{height: 40,  backgroundColor: "transparent", paddingLeft: 30}}
-              onChangeText={(text) => this.setState({text})}
-              defaultValue={this.state.user.email}
+              onChangeText={(text) => this.debouncedUpdate({ ...this.props.user, email: text })}
+              defaultValue={this.props.user.email}
             />
           </View>
           <View style={{marginTop: 7, borderBottomWidth: 1, borderBottomColor: "#ddd"}}>
             <Image style={{position: "absolute", top: 12}} source={require("../images/fa-globe.png")} />
             <TextInput
               style={{height: 40, flex: 1, backgroundColor: "transparent", paddingLeft: 30, lineHeight: 40}}
-              onChangeText={(text) => this.setState({text})}
-              defaultValue={this.state.user.website}
+              onChangeText={(text) => this.debouncedUpdate({ ...this.props.user, website: text })}
+              defaultValue={this.props.user.website}
             />
           </View>
         </View>
