@@ -9,6 +9,12 @@ function receiveProfile(user) {
   }
 }
 
+export function getCurrentUser() {
+  return (dispatch) => {
+    Api.getCurrentUser().then((user) => dispatch(receiveProfile(user)));
+  }
+}
+
 export function saveProfile(user) {
   return (dispatch) => {
     Api.createUser(user).then(() => dispatch(receiveProfile(user)));

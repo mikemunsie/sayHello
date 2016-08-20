@@ -105,9 +105,9 @@ export default class Api {
 				  this.usersInArea[key]['distance'] = distance
 				});
 			}
-			
+
 		}
-		
+
 	}
 
 	getUsersInArea() {

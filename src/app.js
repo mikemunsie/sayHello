@@ -4,21 +4,27 @@ import { Provider } from 'react-redux';
 import { configureStore } from './store';
 import { Router } from "./router";
 import { colors } from "./styles/stylesheet";
+import processes from "./processes";
 
 const store = configureStore();
 
 export class App extends Component {
   constructor(props) {
-    super(props)
+    super(props);
+    this.ready = false;
+    User.init();
+    this.ready = true;
   }
   render() {
     return (
-      <Provider store={store}>
-        <View style={{flex: 1}}>
-          <StatusBar backgroundColor={colors.primary} />
-          <Router />
-        </View>
-      </Provider>
+      {if (this.ready) {
+        <Provider store={store}>
+          <View style={{flex: 1}}>
+            <StatusBar backgroundColor={colors.primary} />
+            <Router />
+          </View>
+        </Provider>
+      }}
     );
   }
 }
