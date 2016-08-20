@@ -1,4 +1,4 @@
-import { Api } from "../api";
+import Api from "../api";
 
 export const NOTIFICATION_RECEIVED = 'NOTIFICATION_RECEIVED';
 

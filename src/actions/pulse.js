@@ -1,4 +1,4 @@
-import { Api } from "../api";
+import Api from "../api";
 
 export const PULSE_RECEIVED = 'PULSE_RECEIVED';
 
@@ -9,7 +9,7 @@ function receivePulse(users) {
   }
 }
 
-export function getPulse(user) {
+export function sendPulse(pulse) {
   return (dispatch) => {
     Api.createUser(user).then(() => dispatch(receiveProfile(user)));
   };

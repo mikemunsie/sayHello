@@ -146,7 +146,7 @@ class Api extends EventEmitter {
 				  this.emit(this.ON_MOVED_EVENT, entry)
 				});
 			}
-		}		
+		}
 	}
 
 	getUsersInArea() {

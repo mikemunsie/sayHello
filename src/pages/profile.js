@@ -1,25 +1,23 @@
 import React, { Component } from 'react';
 import { Provider, connect } from "react-redux";
+import LinearGradient from 'react-native-linear-gradient';
 import { Text, Image, ScrollView, Dimensions, TextInput, TouchableHighlight, View } from 'react-native';
-import { AppText, styles } from "../styles/stylesheet";
+import { AppText, styles, colors } from "../styles/stylesheet";
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import ImagePicker from 'react-native-image-picker';
 import { Footer } from "../layouts/footer";
+import * as UserActions from "../actions/user";
 var { height, width } = Dimensions.get('window');
 
 class ProfileComponent extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      pic: undefined,
-      name: "Michael Munsie",
-      title: "Front End Engineer",
-      phone: "817.932.1234",
-      email: "mike@munstrocity.com",
-      website: "http://munstrocity.com"
+      user: this.props.user
     }
   }
   showCamera() {
+    let { dispatch } = this.props;
     ImagePicker.showImagePicker({
       title: 'Select Avatar',
       customButtons: {
@@ -31,16 +29,16 @@ class ProfileComponent extends Component {
       }
     }, (response) => {
       if (!response.data) return;
-      this.setState({
-        pic: {
-          uri: 'data:image/jpeg;base64,' + response.data, isStatic: true
-        }
-      });
+      console.log(dispatch);
+      dispatch(UserActions.saveProfile({
+        ...this.state.user,
+        pic: response.data
+      }));
     });
   }
   render() {
     return (
-      <View style={[styles.container, styles.flexColumn]}>
+      <LinearGradient colors={[colors.primary, '#F9645E']} style={[styles.container, styles.flexColumn]}>
         <TouchableHighlight
           activeOpacity={.9}
           underlayColor="#eee"
@@ -49,9 +47,9 @@ class ProfileComponent extends Component {
         >
           <View style={{flex: 1}}>
             {(() => {
-              if (this.state.pic) {
+              if (this.state.user.pic) {
                 return (
-                  <Image source={this.state.pic} style={[styles.backgroundImage, { position: "absolute", top: 0, left: 0, width: 152, borderRadius: 100, height: 152}]} />
+                  <Image source={{uri: 'data:image/jpeg;base64,' + this.state.user.pic, isStatic: true}} style={[styles.backgroundImage, { position: "absolute", top: 0, left: 0, width: 152, borderRadius: 100, height: 152}]} />
                 )
               } else {
                 return (
@@ -71,12 +69,12 @@ class ProfileComponent extends Component {
           <TextInput
             style={[styles.text, { fontFamily: "Lato-Bold", height: 50, fontSize: 20, borderColor: '#aaa', textAlign: "center", borderWidth: 1}]}
             onChangeText={(text) => this.setState({text})}
-            defaultValue={this.state.name}
+            defaultValue={this.state.user.name}
           />
           <TextInput
             style={{height: 40, backgroundColor: "transparent", fontSize: 17, textAlign: "center", borderColor: 'gray', borderWidth: 0}}
             onChangeText={(text) => this.setState({text})}
-            defaultValue={this.state.title}
+            defaultValue={this.state.user.title}
           />
 
           <View style={{marginTop: 10, borderBottomWidth: 1, borderBottomColor: "#ddd"}}>
@@ -85,7 +83,7 @@ class ProfileComponent extends Component {
               keyboardType="numeric"
               style={{height: 40,  backgroundColor: "transparent", paddingLeft: 30, lineHeight: 40,  borderWidth: 0}}
               onChangeText={(text) => this.setState({text})}
-              defaultValue={this.state.phone}
+              defaultValue={this.state.user.phone}
             />
           </View>
           <View style={{marginTop: 7, borderBottomWidth: 1, borderBottomColor: "#ddd"}}>
@@ -93,7 +91,7 @@ class ProfileComponent extends Component {
             <TextInput
               style={{height: 40,  backgroundColor: "transparent", paddingLeft: 30}}
               onChangeText={(text) => this.setState({text})}
-              defaultValue={this.state.email}
+              defaultValue={this.state.user.email}
             />
           </View>
           <View style={{marginTop: 7, borderBottomWidth: 1, borderBottomColor: "#ddd"}}>
@@ -101,7 +99,7 @@ class ProfileComponent extends Component {
             <TextInput
               style={{height: 40, flex: 1, backgroundColor: "transparent", paddingLeft: 30, lineHeight: 40}}
               onChangeText={(text) => this.setState({text})}
-              defaultValue={this.state.website}
+              defaultValue={this.state.user.website}
             />
           </View>
         </View>
@@ -131,7 +129,7 @@ class ProfileComponent extends Component {
           <Footer router={this.props.router} />
         </View>
 
-      </View>
+      </LinearGradient>
     )
   }
 }

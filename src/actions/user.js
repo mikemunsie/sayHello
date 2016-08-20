@@ -1,4 +1,4 @@
-import { Api } from "../api";
+import Api from "../api";
 
 export const USER_PROFILE_UPDATED = 'USER_PROFILE_UPDATED';
 
@@ -9,8 +9,17 @@ function receiveProfile(user) {
   }
 }
 
+export function getCurrentUser() {
+  return (dispatch) => {
+    Api.getCurrentUser()
+    .then((user) => dispatch(receiveProfile(user)));
+  }
+}
+
 export function saveProfile(user) {
   return (dispatch) => {
-    Api.createUser(user).then(() => dispatch(receiveProfile(user)));
+    console.log(dispatch);
+    console.log(Api.updateMyUser(user));
+    dispatch(receiveProfile(user));
   }
 }

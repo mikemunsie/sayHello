@@ -1,14 +1,14 @@
 import _ from "lodash";
 import { USER_PROFILE_UPDATED } from "../actions/user";
 
-const defaultState = {
+export const defaultState = {
   pic: null,
-  name: "Michael Munsie",
-  phone: "817.932.1234",
-  email: "mike@munstrocity.com",
-  website: "munstrocity.com",
+  name: "New User",
+  phone: "123.456.7890",
+  email: "youremail@sample.com",
+  website: "http://",
   profession: "developer",
-  title: "Software Engineer",
+  title: "Your Awesome Title",
   social: {
     twitter: null,
     linkedIn: null
