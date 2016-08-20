@@ -130,6 +130,7 @@ class Api extends EventEmitter {
 				  	entry['id'] = key
 
 				  	this.emit(this.ON_ENTER_EVENT, entry)
+				  	this.emit(this.AREA_CHANGED_EVENT, entry)
 				  });
 				});
 
@@ -140,6 +141,7 @@ class Api extends EventEmitter {
 				  delete this.usersInArea[key]
 
 				  this.emit(this.ON_EXIT_EVENT, entry)
+				  this.emit(this.AREA_CHANGED_EVENT, entry)
 				});
 
 				var onKeyMovedRegistration = this.geoQuery.on("key_moved", (key, location, distance) => {
@@ -149,6 +151,7 @@ class Api extends EventEmitter {
 				  entry['distance'] = distance
 
 				  this.emit(this.ON_MOVED_EVENT, entry)
+				  this.emit(this.AREA_CHANGED_EVENT, entry)
 				});
 			}
 		}

@@ -1,23 +1,74 @@
 "use strict";
 
+// import api from "./api.js"
 import Api from "./api.js"
 
-var api = new Api()
+const api = new Api()
+const api2 = new Api()
 
 const name = "victor" + new Date().getTime()
 var userId = api.createUser({name: name}).key
-var userId2 = api.createUser({name: "Person2" + new Date().getTime()}).key
-var userId3 = api.createUser({name: "Person3" + new Date().getTime()}).key
-
-
 api.setCurrentUserId(userId)
+// var userId3 = api.createUser({name: "Person3" + new Date().getTime()}).key
 
-api.pulse(10.223, 11.1323)
+api.usersInArea = {
+	"id1": {
+		distance: 10,
+		ring: 12323
+	},
+	"id2": {
+		distance: 33,
+		ring: 12323
+	},
+	"id3": {
+		distance: 100,
+		ring: 12323
+	},
+	"id4": {
+		distance: 78,
+		ring: 12323
+	}
+}
 
-api.on("testing", (a) => {
-	console.log("in event")
-	console.log(a)
-})
+console.log(api.getUsersInArea())
+
+// Request/ accept test
+// var userId2 = api2.createUser({name: "Person2" + new Date().getTime()}).key
+// api2.setCurrentUserId(userId)
+// api.on(api.CONTACT_ADDED_EVENT, (user) => {
+// 	console.log("on contact added user 1" + api.currentUserId)
+// 	console.log(user)
+// })
+
+// api2.on(api2.REQUEST_CONTACT_EVENT, (user) => {
+// 	console.log("on request contact user 1")
+// 	console.log(user)
+
+// 	api2.acceptRequest(user.id)
+// })
+
+// api2.on(api2.CONTACT_ADDED_EVENT, (user) => {
+// 	console.log("on contact added user 2")
+// 	console.log(user)
+// })
+
+// api.requestContact(userId2)
+
+
+
+
+
+
+
+
+
+
+// api.pulse(10.223, 11.1323)
+
+// api.on("testing", (a) => {
+// 	console.log("in event")
+// 	console.log(a)
+// })
 
 // let pulseTheOtherCoordinates = function() {
 // 	var offset = 0.001
