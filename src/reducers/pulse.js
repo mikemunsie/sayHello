@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { PULSE_RECEIVED } from "./giphySearchActions";
+import { PULSE_RECEIVED } from "../actions/pulse";
 
 const defaultState = [];
 

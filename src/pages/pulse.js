@@ -36,7 +36,6 @@ class PulsePageComponent extends Component {
     navigator.geolocation.clearWatch(this.watchID);
   }
   render() {
-    const { criteria } = this.props;
     return (
       <View style={[styles.container, styles.flexColumn]}>
         <View style={{flex: 1}}>
@@ -73,7 +72,7 @@ class PulsePageComponent extends Component {
 export const PulsePage = connect(
   state => {
     return {
-      criteria: state.GiphySearch.criteria
+
     }
   }
 )(PulsePageComponent)

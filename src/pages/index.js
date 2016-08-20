@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Image, View } from 'react-native';
 import { AppText, styles } from "../styles/stylesheet";
 
-class IndexComponent extends Component {
+export class IndexPage extends Component {
   constructor(props) {
     super(props)
   }
@@ -10,7 +10,6 @@ class IndexComponent extends Component {
     setTimeout(() => this.props.router.changeRoute("profile"), 0);
   }
   render() {
-    const { criteria } = this.props;
     return (
       <View style={[styles.container, styles.flexColumn]}>
         <View style={[styles.flexRow, { justifyContent: 'center', alignItems: "center", flex: 1}]}>

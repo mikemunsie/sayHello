@@ -5,7 +5,7 @@ import { ProfilePage } from "./pages/profile";
 import { IndexPage } from "./pages/index";
 import { PulsePage } from "./pages/pulse";
 import { ConnectionsPage } from "./pages/connections";
-import { NotificationsPage } from "./pages/connections";
+import { NotificationPage } from "./pages/notification";
 
 let globalNavigator;
 let routeIndex = 0;
@@ -31,6 +31,11 @@ export class Router extends Component {
         transition: Navigator.SceneConfigs.FloatFromRight
       },
       {
+        page: "connections",
+        view: (navigator) => <ConnectionsPage router={this.router(navigator)} />,
+        transition: Navigator.SceneConfigs.FloatFromRight
+      },
+      {
         page: "notification",
         view: (navigator) => <NotificationPage router={this.router(navigator)} />,
         transition: Navigator.SceneConfigs.FloatFromRight
@@ -43,11 +48,6 @@ export class Router extends Component {
       {
         page: "pulse",
         view: (navigator) => <PulsePage router={this.router(navigator)} />,
-        transition: Navigator.SceneConfigs.FloatFromRight
-      },
-      {
-        page: "connections",
-        view: (navigator) => <ConnectionsPage router={this.router(navigator)} />,
         transition: Navigator.SceneConfigs.FloatFromRight
       }
     ];

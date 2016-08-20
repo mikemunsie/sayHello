@@ -1,11 +1,11 @@
 import _ from "lodash";
-import { USER_PROFILE_UPDATED } from "./giphySearchActions";
+import { USER_PROFILE_UPDATED } from "../actions/user";
 
 const defaultState = {
   pic: null,
   name: "Michael Munsie",
   phone: "817.932.1234",
-  email: "mike@munstrocity.com"
+  email: "mike@munstrocity.com",
   website: "munstrocity.com",
   profession: "developer",
   title: "Software Engineer",

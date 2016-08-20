@@ -39,7 +39,6 @@ class ProfileComponent extends Component {
     });
   }
   render() {
-    const { criteria } = this.props;
     return (
       <View style={[styles.container, styles.flexColumn]}>
         <TouchableHighlight

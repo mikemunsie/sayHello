@@ -74,13 +74,13 @@ export class Api {
 				  console.log("GeoQuery has loaded and fired all other events for initial data");
 				});
 
-				var onKeyEnteredRegistration = this.geoQuery.on("key_entered", function(key, location, distance) {
+				var onKeyEnteredRegistration = this.geoQuery.on("key_entered", (key, location, distance) => {
 				  console.log(key + " entered query at " + location + " (" + distance + " km from center)");
 
-				  this.usersInArea[key] || this.usersInArea[key] = {}
-				  def entry = this.usersInArea[key]
+				  if (!this.usersInArea[key]) this.usersInArea[key] = {};
+				  let entry = this.usersInArea[key];
 
-				  getUser(key).then((user) => {
+				  this.getUser(key).then((user) => {
 				  	entry['distance'] = distance
 				  	entry['user'] = user
 				  	entry['id'] = key
@@ -117,7 +117,7 @@ export class Api {
 	}
 
 	getUser(userId) {
-		usersRef.child(userId).once('value').then((snapshot) => snapshot.val())
+		return usersRef.child(userId).once('value').then((snapshot) => snapshot.val())
 	}
 
 	getCurrentUser() {
