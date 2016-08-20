@@ -1,5 +1,7 @@
 "use strict";
 
+const _ = require("lodash");
+
 const firebase = require('firebase');
 const GeoFire = require('geofire');
 
@@ -12,15 +14,13 @@ var config = {
   };
 
 const firebaseApp = firebase.initializeApp(config);
-
 const databaseRef = firebaseApp.database().ref();
-
 const usersRef = databaseRef.child("users")
 
 const globalGeoFire = new GeoFire(databaseRef.child("locations"))
 
 
-export class Api {
+class Api {
 
 	constructor() {
 		this.currentUserId = ""
@@ -29,19 +29,23 @@ export class Api {
 		this.usersInArea = {}
 	}
 
+	setCurrentUserId(userId) {
+		this.currentUserId = userId
+	}
+
 	createUser(user) {
 		var postUser = {
-		pic: user.pic || null,
-  	name: user.name || null,
-		phone: user.phone || null,
-		email: user.email || null,
-		website: user.website || null,
-		profession: user.profession || null,
-		title: user.title || null,
-		social: {
-			twitter: user && user.social && user.social.twitter || null,
-		    linkedIn: user && user.social && user.social.linkedIn || null
-	  	}
+			pic: user.pic || null,
+  			name: user.name || null,
+			phone: user.phone || null,
+			email: user.email || null,
+			website: user.website || null,
+			profession: user.profession || null,
+			title: user.title || null,
+			social: {
+				twitter: user && user.social && user.social.twitter || null,
+			    linkedIn: user && user.social && user.social.linkedIn || null
+		  	}
 		}
 
 		return usersRef.push(postUser)
@@ -53,32 +57,31 @@ export class Api {
 
 	pulse(lat, long, userId) {
 		console.log("pulsing %s %s %s", lat, long, userId)
-		var gf = globalGeoFire
-		// gf.set("location", [lat, long])
-		gf.set(userId || this.currentUserId, [lat, long])
+		this.geoFire.set(userId || this.currentUserId, [lat, long])
 
 		if (!userId) {
 			if (this.geoQuery) {
 				this.geoQuery.updateCriteria({
-					center: [lat, long],
-  					radius: 100
+					center: [lat, long]
 				})
 			} else {
 				this.geoQuery = globalGeoFire.query({
 	  				center: [lat, long],
-	  				radius: 10
+	  				radius: 1000
 				});
 
-				var self = this;
-				var onReadyRegistration = this.geoQuery.on("ready", function() {
+				var onReadyRegistration = this.geoQuery.on("ready", () => {
 				  console.log("GeoQuery has loaded and fired all other events for initial data");
 				});
 
 				var onKeyEnteredRegistration = this.geoQuery.on("key_entered", (key, location, distance) => {
 				  console.log(key + " entered query at " + location + " (" + distance + " km from center)");
 
-				  if (!this.usersInArea[key]) this.usersInArea[key] = {};
-				  let entry = this.usersInArea[key];
+				  if (!this.usersInArea[key]) {
+				  	this.usersInArea[key] = {}
+				  }
+
+				  const entry = this.usersInArea[key]
 
 				  this.getUser(key).then((user) => {
 				  	entry['distance'] = distance
@@ -89,31 +92,31 @@ export class Api {
 
 				});
 
-				var onKeyExitedRegistration = this.geoQuery.on("key_exited", function(key, location, distance) {
+				var onKeyExitedRegistration = this.geoQuery.on("key_exited", (key, location, distance) => {
 				  console.log(key + " exited query to " + location + " (" + distance + " km from center)");
 
 				  delete this.usersInArea[key]
 
 				});
 
-				var onKeyMovedRegistration = this.geoQuery.on("key_moved", function(key, location, distance) {
+				var onKeyMovedRegistration = this.geoQuery.on("key_moved", (key, location, distance) => {
 				  console.log(key + " moved within query to " + location + " (" + distance + " km from center)");
 
-				  this.usersInArea[key].distance = distance
+				  this.usersInArea[key]['distance'] = distance
 				});
 			}
-
+			
 		}
-
+		
 	}
 
 	getUsersInArea() {
-		var list = []
-		for (key in this.usersInArea) {
-			list.push(this.usersInArea[key])
-		}
+		var users = _.values(this.usersInArea)
+		_.remove(users, (user) => {
+			_.keys(user).length === 0
+		})
 
-		return list
+		return users
 	}
 
 	getUser(userId) {
@@ -121,13 +124,9 @@ export class Api {
 	}
 
 	getCurrentUser() {
-		getUser(this.currentUserId)
+		return getUser(this.currentUserId)
 	}
 
-	setCurrentUserId(userId) {
-		this.currentUserId = userId
-		this.geoFire = new GeoFire(usersRef.child(userId))
-	}
 }
 
 var api = new Api()
@@ -142,12 +141,24 @@ api.setCurrentUserId(userId)
 
 api.pulse(10.223, 11.1323)
 
-var count = 0
-setInterval(() => {
-	api.pulse(10.23 + count, 11.1233 + count, userId2)
-	api.pulse(0 + count, 0 + count, userId3)
 
-	count++
-}, 500);
+function pulseTheTestCoordinates() {
+	var offset = 0.001
+	var lat = 10.223
+	var long = 11.223
+	setInterval(() => {
+		lat += offset
+		long += offset
+		api.pulse(lat, long, userId2)
+		api.pulse(lat + 0.002, long + 0.002, userId3)
 
+		setTimeout(() => {
+			console.log(api.getUsersInArea())
+		})
 
+	}, 500);
+}
+
+setTimeout(() => {
+	pulseTheOtherCoordinates()
+}, 2000)
