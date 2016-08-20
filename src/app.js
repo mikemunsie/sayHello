@@ -1,4 +1,3 @@
-import _ from "lodash";
 import React, { Component } from 'react';
 import { AppRegistry, StatusBar, View } from 'react-native';
 import { Provider } from 'react-redux';

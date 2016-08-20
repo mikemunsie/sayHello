@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Provider, connect } from "react-redux";
+import LinearGradient from 'react-native-linear-gradient';
 import { Text, Image, ScrollView, Dimensions, TextInput, TouchableHighlight, View } from 'react-native';
-import { AppText, styles } from "../styles/stylesheet";
+import { AppText, styles, colors } from "../styles/stylesheet";
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import ImagePicker from 'react-native-image-picker';
 import { Footer } from "../layouts/footer";
@@ -40,7 +41,7 @@ class ProfileComponent extends Component {
   }
   render() {
     return (
-      <View style={[styles.container, styles.flexColumn]}>
+      <LinearGradient colors={[colors.primary, '#F9645E']} style={[styles.container, styles.flexColumn]}>
         <TouchableHighlight
           activeOpacity={.9}
           underlayColor="#eee"
@@ -131,7 +132,7 @@ class ProfileComponent extends Component {
           <Footer router={this.props.router} />
         </View>
 
-      </View>
+      </LinearGradient>
     )
   }
 }
