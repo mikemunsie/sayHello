@@ -60,7 +60,11 @@ class Api extends EventEmitter {
 	}
 
 	getUser(userId) {
-		return usersRef.child(userId).once('value').then((snapshot) => snapshot.val())
+		return usersRef.child(userId).once('value').then((snapshot) =>  {
+			const user = snapshot.val()
+			user[id] = userId
+			return user
+		})
 	}
 
 	createUser(user) {
@@ -68,6 +72,7 @@ class Api extends EventEmitter {
 	}
 
 	updateMyUser(user) {
+		user['id'] = this.currentUserId
 		return this.myRef.update(getUserData_(user))
 	}
 
