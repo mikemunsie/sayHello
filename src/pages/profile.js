@@ -6,16 +6,18 @@ import { AppText, styles, colors } from "../styles/stylesheet";
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import ImagePicker from 'react-native-image-picker';
 import { Footer } from "../layouts/footer";
+import * as UserActions from "../actions/user";
 var { height, width } = Dimensions.get('window');
 
 class ProfileComponent extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      user: props.user
+      user: this.props.user
     }
   }
   showCamera() {
+    let { dispatch } = this.props;
     ImagePicker.showImagePicker({
       title: 'Select Avatar',
       customButtons: {
@@ -27,11 +29,11 @@ class ProfileComponent extends Component {
       }
     }, (response) => {
       if (!response.data) return;
-      this.setState({
-        pic: {
-          uri: 'data:image/jpeg;base64,' + response.data, isStatic: true
-        }
-      });
+      console.log(dispatch);
+      dispatch(UserActions.saveProfile({
+        ...this.state.user,
+        pic: response.data
+      }));
     });
   }
   render() {
@@ -47,7 +49,7 @@ class ProfileComponent extends Component {
             {(() => {
               if (this.state.user.pic) {
                 return (
-                  <Image source={this.state.user.pic} style={[styles.backgroundImage, { position: "absolute", top: 0, left: 0, width: 152, borderRadius: 100, height: 152}]} />
+                  <Image source={{uri: 'data:image/jpeg;base64,' + this.state.user.pic, isStatic: true}} style={[styles.backgroundImage, { position: "absolute", top: 0, left: 0, width: 152, borderRadius: 100, height: 152}]} />
                 )
               } else {
                 return (
@@ -135,7 +137,7 @@ class ProfileComponent extends Component {
 export const ProfilePage = connect(
   state => {
     return {
-      user: state.User.user
+      user: state.User
     }
   }
 )(ProfileComponent)

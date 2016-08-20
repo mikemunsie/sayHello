@@ -1,6 +1,7 @@
 "use strict";
 
 import _ from "lodash";
+import EventEmitter from 'events';
 
 const firebase = require('firebase');
 const GeoFire = require('geofire');
@@ -11,30 +12,63 @@ var config = {
     authDomain: "sayhello-bde3e.firebaseapp.com",
     databaseURL: "https://sayhello-bde3e.firebaseio.com",
     storageBucket: "sayhello-bde3e.appspot.com",
-  };
+};
 
 const firebaseApp = firebase.initializeApp(config);
 const databaseRef = firebaseApp.database().ref();
 const usersRef = databaseRef.child("users")
+const pendingsRef = databaseRef.child("pending")
+
 
 const globalGeoFire = new GeoFire(databaseRef.child("locations"))
 
 
-export default class Api {
+class Api extends EventEmitter {
 
 	constructor() {
+		super();
+
+		this.AREA_CHANGED_EVENT = "api_area_changed"
+		this.ON_ENTER_EVENT = "api_on_enter"
+		this.ON_EXIT_EVENT = "api_on_exit"
+		this.ON_MOVED_EVENT = "api_on_moved"
 		this.currentUserId = ""
 		this.geoFire = globalGeoFire
 		this.geoQuery = null
 		this.usersInArea = {}
+		this.pendingRef = null
 	}
+
 
 	setCurrentUserId(userId) {
 		this.currentUserId = userId
+		this.myRef = usersRef.child(userId)
+		this.pendingRef = databaseRef.child("pending/" + userId)
+		// this.contacts = databaseRef.con
+	}
+
+	getCurrentUser() {
+		return getUser(this.currentUserId)
+	}
+
+	getUser(userId) {
+		return usersRef.child(userId).once('value').then((snapshot) => snapshot.val())
 	}
 
 	createUser(user) {
-		var postUser = {
+		return usersRef.push(this.getUserData_(user))
+	}
+
+	updateMyUser(user) {
+		return usersRef.child(userId).update(getUserData_(user))
+	}
+
+	updateUser(userId, user) {
+		return usersRef.child()
+	}
+
+	getUserData_(user) {
+		return {
 			pic: user.pic || null,
   			name: user.name || null,
 			phone: user.phone || null,
@@ -47,8 +81,6 @@ export default class Api {
 			    linkedIn: user && user.social && user.social.linkedIn || null
 		  	}
 		}
-
-		return usersRef.push(postUser)
 	}
 
 	pulseMyLocation(lat, long) {
@@ -87,27 +119,30 @@ export default class Api {
 				  	entry['distance'] = distance
 				  	entry['user'] = user
 				  	entry['id'] = key
-				  })
 
-
+				  	this.emit(this.ON_ENTER_EVENT, entry)
+				  });
 				});
 
 				var onKeyExitedRegistration = this.geoQuery.on("key_exited", (key, location, distance) => {
 				  console.log(key + " exited query to " + location + " (" + distance + " km from center)");
 
+				  const entry = this.usersInArea[key]
 				  delete this.usersInArea[key]
 
+				  this.emit(this.ON_EXIT_EVENT, entry)
 				});
 
 				var onKeyMovedRegistration = this.geoQuery.on("key_moved", (key, location, distance) => {
 				  console.log(key + " moved within query to " + location + " (" + distance + " km from center)");
 
-				  this.usersInArea[key]['distance'] = distance
+				  const entry = this.usersInArea[key]
+				  entry['distance'] = distance
+
+				  this.emit(this.ON_MOVED_EVENT, entry)
 				});
 			}
-
 		}
-
 	}
 
 	getUsersInArea() {
@@ -119,12 +154,10 @@ export default class Api {
 		return users
 	}
 
-	getUser(userId) {
-		return usersRef.child(userId).once('value').then((snapshot) => snapshot.val())
-	}
+	// request/accept api
+	requestContact(userId) {
 
-	getCurrentUser() {
-		return getUser(this.currentUserId)
 	}
-
 }
+
+export default new Api()

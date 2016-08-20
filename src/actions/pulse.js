@@ -1,4 +1,4 @@
-import { Api } from "../api";
+import Api from "../api";
 
 export const PULSE_RECEIVED = 'PULSE_RECEIVED';
 

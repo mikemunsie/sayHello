@@ -14,24 +14,28 @@ api.setCurrentUserId(userId)
 
 api.pulse(10.223, 11.1323)
 
+api.on("testing", (a) => {
+	console.log("in event")
+	console.log(a)
+})
 
-let pulseTheOtherCoordinates = function() {
-	var offset = 0.001
-	var lat = 10.223
-	var long = 11.223
-	setInterval(() => {
-		lat += offset
-		long += offset
-		api.pulse(lat, long, userId2)
-		api.pulse(lat + 0.002, long + 0.002, userId3)
+// let pulseTheOtherCoordinates = function() {
+// 	var offset = 0.001
+// 	var lat = 10.223
+// 	var long = 11.223
+// 	setInterval(() => {
+// 		lat += offset
+// 		long += offset
+// 		api.pulse(lat, long, userId2)
+// 		api.pulse(lat + 0.002, long + 0.002, userId3)
 
-		setTimeout(() => {
-			console.log(api.getUsersInArea())
-		})
+// 		setTimeout(() => {
+// 			console.log(api.getUsersInArea())
+// 		})
 
-	}, 500);
-}
+// 	}, 500);
+// }
 
-setTimeout(() => {
-	pulseTheOtherCoordinates()
-}, 2000)
+// setTimeout(() => {
+// 	pulseTheOtherCoordinates()
+// }, 2000)

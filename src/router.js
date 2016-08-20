@@ -1,6 +1,6 @@
 import _ from "lodash";
 import React, { Component } from 'react';
-import { AppRegistry, Navigator, Text, View, BackAndroid } from 'react-native';
+import { Navigator, Text, View, BackAndroid } from 'react-native';
 import { ProfilePage } from "./pages/profile";
 import { IndexPage } from "./pages/index";
 import { PulsePage } from "./pages/pulse";

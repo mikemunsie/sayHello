@@ -3,29 +3,41 @@ import { AppRegistry, StatusBar, View } from 'react-native';
 import { Provider } from 'react-redux';
 import { configureStore } from './store';
 import { Router } from "./router";
-import { colors } from "./styles/stylesheet";
-import processes from "./processes";
+import { colors, AppText } from "./styles/stylesheet";
+import * as processes from "./processes";
 
 const store = configureStore();
 
-export class App extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
-    this.ready = false;
-    User.init();
-    this.ready = true;
+    this.state = {
+      ready: false
+    };
+  }
+  componentDidMount() {
+    processes.User.init();
+    this.setState({
+      ready: true
+    });
   }
   render() {
-    return (
-      {if (this.ready) {
+    if (this.state.ready) {
+      return (
         <Provider store={store}>
           <View style={{flex: 1}}>
             <StatusBar backgroundColor={colors.primary} />
             <Router />
           </View>
         </Provider>
-      }}
-    );
+      )
+    } else {
+      return (
+        <View>
+          <AppText>Loading App...</AppText>
+        </View>
+      )
+    }
   }
 }
 

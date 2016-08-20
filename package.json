@@ -7,6 +7,7 @@
     "android": "react-native run-android"
   },
   "dependencies": {
+    "events": "^1.1.1",
     "firebase": "^3.3.0",
     "geofire": "^4.1.1",
     "lodash": "^4.15.0",
