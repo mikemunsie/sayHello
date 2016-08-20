@@ -1,16 +1,20 @@
 import _ from "lodash";
 import React, { Component } from 'react';
 import { AppRegistry, Navigator, Text, View, BackAndroid } from 'react-native';
-import { ManagePage } from "./pages/manage";
+import { ProfilePage } from "./pages/profile";
 import { IndexPage } from "./pages/index";
-import { GiphySearchPage } from "./pages/giphySearch";
-
+import { PulsePage } from "./pages/pulse";
+import { ConnectionsPage } from "./pages/connections";
 
 let globalNavigator;
+let routeIndex = 0;
 
 BackAndroid.addEventListener('hardwareBackPress', function() {
   if (globalNavigator) {
-    globalNavigator.pop();
+    if (routeIndex-1 > 0) {
+      routeIndex--;
+      globalNavigator.pop();
+    }
     return true;
   }
   return false;
@@ -26,13 +30,18 @@ export class Router extends Component {
         transition: Navigator.SceneConfigs.FloatFromRight
       },
       {
-        page: "manage",
-        view: (navigator) => <ManagePage router={this.router(navigator)} />,
+        page: "profile",
+        view: (navigator) => <ProfilePage router={this.router(navigator)} />,
         transition: Navigator.SceneConfigs.FloatFromRight
       },
       {
-        page: "giphySearch",
-        view: (navigator) => <GiphySearchPage router={this.router(navigator)} />,
+        page: "pulse",
+        view: (navigator) => <PulsePage router={this.router(navigator)} />,
+        transition: Navigator.SceneConfigs.FloatFromRight
+      },
+      {
+        page: "connections",
+        view: (navigator) => <ConnectionsPage router={this.router(navigator)} />,
         transition: Navigator.SceneConfigs.FloatFromRight
       }
     ];
@@ -43,8 +52,14 @@ export class Router extends Component {
   router(navigator) {
     globalNavigator = navigator;
     return {
-      changeRoute: (page) => navigator.push(_.cloneDeep(_.find(this.routes, { page }))),
-      previousRoute: () => navigator.pop()
+      changeRoute: (page) => {
+        routeIndex++;
+        navigator.push(_.cloneDeep(_.find(this.routes, { page })))
+      },
+      previousRoute: () => {
+        routeIndex--;
+        navigator.pop();
+      }
     }
   }
   render() {

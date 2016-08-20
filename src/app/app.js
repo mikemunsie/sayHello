@@ -1,9 +1,10 @@
 import _ from "lodash";
 import React, { Component } from 'react';
-import { AppRegistry } from 'react-native';
+import { AppRegistry, StatusBar, View } from 'react-native';
 import { Provider } from 'react-redux';
 import { configureStore } from './store';
 import { Router } from "./router";
+import { colors } from "./styles/stylesheet";
 
 const store = configureStore();
 
@@ -14,7 +15,10 @@ export class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <Router />
+        <View style={{flex: 1}}>
+          <StatusBar backgroundColor={colors.primary} />
+          <Router />
+        </View>
       </Provider>
     );
   }

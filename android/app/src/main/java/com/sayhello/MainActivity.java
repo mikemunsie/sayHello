@@ -1,6 +1,7 @@
 package com.sayhello;
 
 import com.facebook.react.ReactActivity;
+import com.imagepicker.ImagePickerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;

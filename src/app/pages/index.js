@@ -1,43 +1,24 @@
 import React, { Component } from 'react';
 import { Provider, connect } from "react-redux";
-import { Text, Image, TouchableHighlight, View } from 'react-native';
+import { Text, Image, Dimensions, TouchableHighlight, View } from 'react-native';
 import { AppText, styles } from "../styles/stylesheet";
 
 class IndexComponent extends Component {
   constructor(props) {
     super(props)
   }
+  componentDidMount() {
+    setTimeout(() => this.props.router.changeRoute("profile"), 0);
+  }
   render() {
     const { criteria } = this.props;
     return (
       <View style={[styles.container, styles.flexColumn]}>
-        <View style={{flex: 1, flexDirection: "row",  alignItems:'center'}}>
-          <View style={{flex: 1}}>
-            <AppText style={styles.h1}>Say Hello</AppText>
-            <AppText style={[styles.p, styles.center]}>The Social App</AppText>
-          </View>
+        <View style={[styles.flexRow, { justifyContent: 'center', alignItems: "center", flex: 1}]}>
+          <Image source={require("../images/logo.png")} style={{width: 200, height: 220}} />
         </View>
-        <View style={{flex: 0, height: 200, alignItems: "center"}}>
-          <TouchableHighlight
-            activeOpacity={.9}
-            underlayColor="#ffffff"
-            style={[styles.button, { marginBottom: 15 }]}
-            onPress={() => this.props.router.changeRoute("manage")}
-          >
-            <View style={[styles.buttonBlue]}>
-              <AppText style={styles.buttonText}>Example View</AppText>
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight
-            activeOpacity={.9}
-            underlayColor="#ffffff"
-            style={[styles.button, { marginBottom: 15 }]}
-            onPress={() => this.props.router.changeRoute("giphySearch")}
-          >
-            <View style={[styles.buttonOrange]}>
-              <AppText style={styles.buttonText}>Load Giphy Test View</AppText>
-            </View>
-          </TouchableHighlight>
+        <View style={{height: 20, flex: 0, marginBottom: 40}}>
+          <AppText style={[styles.center, styles.white]}>2016 AT&T Hackathon</AppText>
         </View>
       </View>
     )

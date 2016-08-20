@@ -66,7 +66,7 @@ export class ViewsDashboard extends Component {
         </View>
         <View style={styles.container}>
           <Text style={styles.welcome}>
-            {JSON.stringify(this.state.initialPosition)}
+            { (this.state.initialPosition)}
           </Text>
           <Text style={styles.instructions}>
             To get started, edit index.android.js

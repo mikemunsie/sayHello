@@ -1,0 +1,75 @@
+Hackathon Notes
+
+-Camera functionality
+- Phone, Title, Description, email, site, social links
+- See people around you
+  - Select people around you and request invite (name and title pic, initials maybe)
+  - Phone to get GPS Coords
+- Push Notification
+- My Card, Share, Connections
+
+
+
+FEATURES:
+  - Filter by Profession:
+    - Developer
+    - Teacher
+    - Creative
+  - Google Maps nearest Place of interest
+  - Distance Rings (3 rings, Probably no more than a rooms worth)
+
+
+Access Camera / Photos and then based on that selection becomes your profile pic
+
+Links: Card, share, index
+Receive a card, figure out where you received and when
+
+Send GPS Coords to api
+
+Users.profile()
+.then(data)
+
+
+[ GET ]
+
+/profile
+{
+  pic: BASE64IMAGE,
+  name: String,
+  phone: Number,
+  email: String,
+  website: String,
+  profession: String,
+  title: String.
+  social: {
+    twitter: String,
+    linkedIn: String
+  }
+}
+
+/usersInArea
+[
+  {
+    id: Number,
+    user: User,
+    distance: Number
+  }
+]
+
+/notification
+{
+  user: User
+}
+
+[ POST ]
+
+/pulse
+{
+  id: Number,
+  latitude: Decimal,
+  longitutde: Decimal
+}
+
+
+Firebase
+https://github.com/davideast/firebase-react-native-sample
