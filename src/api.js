@@ -19,6 +19,7 @@ const databaseRef = firebaseApp.database().ref();
 const usersRef = databaseRef.child("users")
 const pendingsRef = databaseRef.child("pending")
 const contactsRef = databaseRef.child("contacts")
+const globalContactsRef = contactsRef
 
 
 const globalGeoFire = new GeoFire(databaseRef.child("locations"))
@@ -67,11 +68,7 @@ class Api extends EventEmitter {
 	}
 
 	updateMyUser(user) {
-		return usersRef.child(userId).update(getUserData_(user))
-	}
-
-	updateUser(userId, user) {
-		return usersRef.child()
+		return this.myRef.update(getUserData_(user))
 	}
 
 	getUserData_(user) {
@@ -171,6 +168,8 @@ class Api extends EventEmitter {
 	acceptRequest(userId) {
 		return this.pendingsRef.child(userId).remove().then(() => {
 			return this.contactsRef.child(userId).set({contact: true})
+		}).then(() => {
+			return globalContactsRef.child(userId).child(this.ccurrentUserId).set({contact: true})
 		})
 	}
 
