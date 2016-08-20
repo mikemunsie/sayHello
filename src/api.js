@@ -18,6 +18,8 @@ const firebaseApp = firebase.initializeApp(config);
 const databaseRef = firebaseApp.database().ref();
 const usersRef = databaseRef.child("users")
 const pendingsRef = databaseRef.child("pending")
+const contactsRef = databaseRef.child("contacts")
+const globalContactsRef = contactsRef
 
 
 const globalGeoFire = new GeoFire(databaseRef.child("locations"))
@@ -32,23 +34,29 @@ class Api extends EventEmitter {
 		this.ON_ENTER_EVENT = "api_on_enter"
 		this.ON_EXIT_EVENT = "api_on_exit"
 		this.ON_MOVED_EVENT = "api_on_moved"
+		this.REQUEST_CONTACT_EVENT = "api_request_contact"
+		this.CONTACT_ADDED_EVENT = "api_contact_added"
 		this.currentUserId = ""
 		this.geoFire = globalGeoFire
 		this.geoQuery = null
 		this.usersInArea = {}
-		this.pendingRef = null
+		this.pendingsRef = null
+		this.contactsRef = null
 	}
 
 
 	setCurrentUserId(userId) {
 		this.currentUserId = userId
 		this.myRef = usersRef.child(userId)
-		this.pendingRef = databaseRef.child("pending/" + userId)
-		// this.contacts = databaseRef.con
+		this.pendingsRef = pendingsRef.child(userId)
+		this.contactsRef = contactsRef.child(userId)
+
+		this.listenToPendingRequests_()
+		this.listenToAddedContacts_()
 	}
 
 	getCurrentUser() {
-		return getUser(this.currentUserId)
+		return this.getUser(this.currentUserId)
 	}
 
 	getUser(userId) {
@@ -60,11 +68,7 @@ class Api extends EventEmitter {
 	}
 
 	updateMyUser(user) {
-		return usersRef.child(userId).update(getUserData_(user))
-	}
-
-	updateUser(userId, user) {
-		return usersRef.child()
+		return this.myRef.update(getUserData_(user))
 	}
 
 	getUserData_(user) {
@@ -154,9 +158,37 @@ class Api extends EventEmitter {
 		return users
 	}
 
-	// request/accept api
+	// ########  request/accept api
 	requestContact(userId) {
+		this.getCurrentUser().then((user) => {
+			this.pendingsRef.child(userId).set(user)	
+		})
+	}
 
+	acceptRequest(userId) {
+		return this.pendingsRef.child(userId).remove().then(() => {
+			return this.contactsRef.child(userId).set({contact: true})
+		}).then(() => {
+			return globalContactsRef.child(userId).child(this.ccurrentUserId).set({contact: true})
+		})
+	}
+
+	denyRequest(userId) {
+		this.pendingsRef.child(userId).remove()
+	}
+
+	listenToPendingRequests_() {
+		this.pendingsRef.on('child_added', (snapshot) => {
+			this.emit(this.REQUEST_CONTACT_EVENT, { id: snapshot.key, user: snapshot.val() })
+		})
+	}
+
+	listenToAddedContacts_() {
+		this.contactsRef.on('child_added', (snapshot) => {
+			this.getUser(snapshot.key).then((user) => {
+				this.emit(this.CONTACT_ADDED_EVENT, { id: snapshot.key, user: user})
+			})
+		})
 	}
 }
 
