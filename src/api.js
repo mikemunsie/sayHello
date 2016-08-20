@@ -60,7 +60,11 @@ class Api extends EventEmitter {
 	}
 
 	getUser(userId) {
-		return usersRef.child(userId).once('value').then((snapshot) => snapshot.val())
+		return usersRef.child(userId).once('value').then((snapshot) =>  {
+			const user = snapshot.val()
+			user[id] = userId
+			return user
+		})
 	}
 
 	createUser(user) {
@@ -68,6 +72,7 @@ class Api extends EventEmitter {
 	}
 
 	updateMyUser(user) {
+		user['id'] = this.currentUserId
 		return this.myRef.update(getUserData_(user))
 	}
 
@@ -125,6 +130,7 @@ class Api extends EventEmitter {
 				  	entry['id'] = key
 
 				  	this.emit(this.ON_ENTER_EVENT, entry)
+				  	this.emit(this.AREA_CHANGED_EVENT, entry)
 				  });
 				});
 
@@ -135,6 +141,7 @@ class Api extends EventEmitter {
 				  delete this.usersInArea[key]
 
 				  this.emit(this.ON_EXIT_EVENT, entry)
+				  this.emit(this.AREA_CHANGED_EVENT, entry)
 				});
 
 				var onKeyMovedRegistration = this.geoQuery.on("key_moved", (key, location, distance) => {
@@ -144,6 +151,7 @@ class Api extends EventEmitter {
 				  entry['distance'] = distance
 
 				  this.emit(this.ON_MOVED_EVENT, entry)
+				  this.emit(this.AREA_CHANGED_EVENT, entry)
 				});
 			}
 		}
@@ -151,8 +159,33 @@ class Api extends EventEmitter {
 
 	getUsersInArea() {
 		var users = _.values(this.usersInArea)
+
+		// filter empty objects
 		_.remove(users, (user) => {
 			_.keys(user).length === 0
+		})
+
+		// calculate ranges and convert to ring range
+		const oldMax = _.maxBy(users, (user) => {
+			return user.distance
+		}).distance
+
+
+		const oldMin = _.minBy(users, (user) => {
+			return user.distance
+		}).distance
+
+		const oldRange = oldMax - oldMin
+		const newRange = 2
+		const newMin = 0
+
+		// calculate the rings
+		users.forEach((user) => {
+			console.log(user)
+			var ring = oldRange !== 0 ? ((((user.distance - oldMin) * newRange) / oldRange) + newMin) : newMin
+			// var ring = user.distance / 3
+			ring = Math.min(Math.round(ring), 2)
+			user['ring'] = ring
 		})
 
 		return users
