@@ -151,8 +151,33 @@ class Api extends EventEmitter {
 
 	getUsersInArea() {
 		var users = _.values(this.usersInArea)
+
+		// filter empty objects
 		_.remove(users, (user) => {
 			_.keys(user).length === 0
+		})
+
+		// calculate ranges and convert to ring range
+		const oldMax = _.maxBy(users, (user) => {
+			return user.distance
+		}).distance
+
+
+		const oldMin = _.minBy(users, (user) => {
+			return user.distance
+		}).distance
+
+		const oldRange = oldMax - oldMin
+		const newRange = 2
+		const newMin = 0
+
+		// calculate the rings
+		users.forEach((user) => {
+			console.log(user)
+			var ring = oldRange !== 0 ? ((((user.distance - oldMin) * newRange) / oldRange) + newMin) : newMin
+			// var ring = user.distance / 3
+			ring = Math.min(Math.round(ring), 2)
+			user['ring'] = ring
 		})
 
 		return users
