@@ -1,6 +1,10 @@
 package com.sayhello;
 
 import com.facebook.react.ReactActivity;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
+import com.github.xinthink.rnmk.ReactMaterialKitPackage;
+import com.ocetnik.timer.BackgroundTimerPackage;
 
 public class MainActivity extends ReactActivity {
 
