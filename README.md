@@ -2,9 +2,9 @@
 App for the AT&amp;T Hackathon
 
 What's left
-- [ ] Pulse View
-  - [ ] Animate users by distance
-- [ ] Save user info to Firebase
+- [X] Pulse View
+  - [X] Animate users by distance
+- [X] Save user info to Firebase
 - [ ] List of connections
-- [ ] Clean up styles
-- [ ] Create story
+- [X] Clean up styles
+- [X] Create story
