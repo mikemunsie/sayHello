@@ -8,7 +8,7 @@ A social networking application that helps you find people in the same area with
 - Sketch
 
 <h3>Contributors:</h3>
-Kris Giamello <a href="https://github.com/vjames19">@krislynng</a>: Design, Experience, Logo, Prototype
+Kris Giamello <a href="https://github.com/krislynng">@krislynng</a>: Design, Experience, Logo, Prototype
 <br/>
 Michael Munsie <a href="https://github.com/mikemunsie">@mikemunsie</a>: React Native implementation
 <br/>
