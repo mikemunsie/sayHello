@@ -8,13 +8,12 @@ A social networking application that helps you find people in the same area with
 - Sketch
 
 <h3>Contributors:</h3>
+Kris Giamello <a href="https://github.com/vjames19">@krislynng</a>: Design, Experience, Logo, Prototype
 <br/>
-<b>Kris Giamello</b> <a href="https://github.com/vjames19">@krislynng</a>: Design, Experience, Logo, Prototype
+Michael Munsie <a href="https://github.com/mikemunsie">@mikemunsie</a>: React Native implementation
 <br/>
-<b>Michael Munsie</b> <a href="https://github.com/mikemunsie">@mikemunsie</a>: React Native implementation
+Victor Reventos <a href="https://github.com/vjames19">@vjames19</a>: Engineering and Firebase integration 
 <br/>
-<b>Victor Reventos</b> <a href="https://github.com/vjames19">@vjames19</a>: Engineering and Firebase integration 
+Diem Pham <a href="https://github.com/bi0h4ck">@bi0h4ck</a>: React Native support
 <br/>
-<b>Diem Pham</b> <a href="https://github.com/bi0h4ck">@bi0h4ck</a>: React Native support
-<br/>
-<b>Jeni Munsie</b>: Story
+Jeni Munsie: Story
