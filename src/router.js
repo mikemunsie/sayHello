@@ -28,27 +28,27 @@ export class Router extends Component {
       {
         page: "index",
         view: (navigator) => <IndexPage router={this.router(navigator)} />,
-        transition: Navigator.SceneConfigs.FloatFromRight
+        transition: Navigator.SceneConfigs.FadeAndroid
       },
       {
         page: "connections",
-        view: (navigator) => <ConnectionsPage router={this.router(navigator)} />,
-        transition: Navigator.SceneConfigs.FloatFromRight
+        view: (navigator) => <NotificationPage router={this.router(navigator)} />,
+        transition: Navigator.SceneConfigs.FadeAndroid
       },
       {
         page: "notification",
         view: (navigator) => <NotificationPage router={this.router(navigator)} />,
-        transition: Navigator.SceneConfigs.FloatFromRight
+        transition: Navigator.SceneConfigs.FadeAndroid
       },
       {
         page: "profile",
         view: (navigator) => <ProfilePage router={this.router(navigator)} />,
-        transition: Navigator.SceneConfigs.FloatFromRight
+        transition: Navigator.SceneConfigs.FadeAndroid
       },
       {
         page: "pulse",
         view: (navigator) => <PulsePage router={this.router(navigator)} />,
-        transition: Navigator.SceneConfigs.FloatFromRight
+        transition: Navigator.SceneConfigs.FadeAndroid
       }
     ];
   }

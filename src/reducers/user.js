@@ -3,7 +3,7 @@ import { USER_PROFILE_UPDATED } from "../actions/user";
 
 export const defaultState = {
   pic: null,
-  name: "New User",
+  name: "First & Last Name",
   phone: "123.456.7890",
   email: "youremail@sample.com",
   website: "http://",

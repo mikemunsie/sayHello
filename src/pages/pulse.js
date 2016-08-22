@@ -1,34 +1,35 @@
 import _ from "lodash";
 import React, { Component } from 'react';
 import { Provider, connect } from "react-redux";
+import * as UserActions from "../actions/user";
+import * as PulseActions from "../actions/pulse";
 import { Text, Image, ScrollView, Dimensions, TextInput, TouchableHighlight, View } from 'react-native';
 import { AppText, styles } from "../styles/stylesheet";
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import ImagePicker from 'react-native-image-picker';
 import { Footer } from "../layouts/footer";
 var { height, width } = Dimensions.get('window');
+import Api from "../api";
 
 class PulsePageComponent extends Component {
   constructor(props) {
     super(props);
     this.sprites = {};
     this.watchId = null;
-    this.sampleUsers = [
-      _.cloneDeep(this.props.user),
-      _.cloneDeep(this.props.user),
-      _.cloneDeep(this.props.user)
-    ];
-    this.sampleUsers[0].ring = 0;
-    this.sampleUsers[1].ring = 1;
-    this.sampleUsers[2].ring = 2;
+  }
+  componentDidMount() {
+    let { dispatch } = this.props;
+    dispatch(PulseActions.receiveUsers(Api.getUsersInArea()));
+    Api.on(Api.AREA_CHANGED_EVENT, (entry) => {
+      dispatch(PulseActions.receiveUsers(Api.getUsersInArea()));
+    })
+    Api.on(Api.REQUEST_CONTACT_EVENT, (entry) => {
+      this.props.router.changeRoute("notification");
+    });
 
-    this.sampleUsers[0].id = 0;
-    this.sampleUsers[1].id = 1;
-    this.sampleUsers[2].id = 2;
-    _.each(this.sampleUsers, (user) => this.setupSprite(user));
   }
   setupSprite(user) {
-    let degree = 0;
+    let degree = Math.random() * 3;
     let radius = 200;
     if (user.ring === 0) radius = 100;
     if (user.ring === 1) radius = 200;
@@ -42,8 +43,8 @@ class PulsePageComponent extends Component {
     };
   }
   orbit(user) {
-    let offsetX = (width/2) - 70;
-    let offsetY = (height/2) - 170;
+    let offsetX = 200;
+    let offsetY = 200;
     let y = (Math.sin(this.sprites[user.id].degree) * this.sprites[user.id].radius) + offsetX;
     let x = (Math.cos(this.sprites[user.id].degree) * this.sprites[user.id].radius) + offsetY;
     return {
@@ -51,18 +52,17 @@ class PulsePageComponent extends Component {
       y
     }
   }
-  componentDidMount() {
-
-  }
   render() {
     let counter = 0;
-    let Images = this.sampleUsers.map((user) => {
+    this.sprites = {};
+    _.each(this.props.users, (user) => this.setupSprite(user));
+    let Images = this.props.users.map((user) => {
       let position = this.orbit(user);
       let radius = 60;
       let top = position.x - 60;
       let left = position.y - 60;
       counter++;
-      if (this.props.user.pic) {
+      if (user.pic) {
         return (
           <View key={counter} style={{width: radius, height: radius, top, left, zIndex: 10, borderColor: "#bbb", borderWidth: 4, backgroundColor: "#fff", position: "absolute", borderRadius: 100}}>
             <Image source={{uri: 'data:image/jpeg;base64,' + user.pic, isStatic: true}} style={[styles.backgroundImage, { position: "absolute", top: 0, left: 0, width: 54, height: 54, borderRadius: 100}]} />
@@ -72,7 +72,7 @@ class PulsePageComponent extends Component {
         return (
           <View key={counter} style={{width: radius, height: radius, top, left, borderColor: "#bbb", borderWidth: 4, backgroundColor: "#fff", position: "absolute", borderRadius: 60}}>
             <View style={{ alignItems: "center" }}>
-              <Image source={require("../images/fa-user.png")} style={{marginTop: 15, width: 20, height: 22}} />
+              <Image source={require("../images/fa-userBig.png")} style={{marginTop: 15, width: 20, height: 22}} />
             </View>
           </View>
         );
@@ -81,21 +81,25 @@ class PulsePageComponent extends Component {
 
     return (
       <View style={[styles.container, styles.flexColumn]}>
+        <View style={{flex: 0, height: 85, alignItems: "center", justifyContent: "center", flexDirection: "row"}}>
+          <AppText style={{color: "#fff", fontSize: 17, fontFamily: "Lato-Bold", textAlign: "center"}}>Tap Connection to say Hello!</AppText>
+        </View>
+
         <View style={{flex: 1}}>
 
           {/* Ring 1 */}
-          <View style={{position: "absolute", backgroundColor: "#f06a66", left: width/2 - 200, top: height/2 - (190+100), width: 400, height: 400, borderRadius: 200, borderWidth: 2, borderColor: "#Fa9C98" }}></View>
+          <View style={{position: "absolute", backgroundColor: "rgba(70, 184, 189, 1.00)", left: width/2 - 200, top: height/2 - (190+145), width: 400, height: 400, borderRadius: 200, borderWidth: 2, borderColor: "rgba(116, 221, 226, 1.00)" }}></View>
 
           {/* Ring 1 */}
-          <View style={{position: "absolute", backgroundColor: "#FD726C", left: width/2 - 150, top: height/2 - (190+50), width: 300, height: 300, borderRadius: 300, borderWidth: 2, borderColor: "#Fa9C98" }}></View>
+          <View style={{position: "absolute", backgroundColor: "rgba(102, 210, 215, 1.00)", left: width/2 - 150, top: height/2 - (190+95), width: 300, height: 300, borderRadius: 300, borderWidth: 2, borderColor: "rgba(116, 221, 226, 1.00)" }}></View>
 
           {/* Ring 0 */}
-          <View style={{position: "absolute", backgroundColor: "#f36c66", left: width/2 - 100, top: height/2 - 190, width: 200, height: 200, borderRadius: 200, borderWidth: 2, borderColor: "#Fa9C98" }}></View>
+          <View style={{position: "absolute", backgroundColor: "rgba(85, 196, 201, 1.00)", left: width/2 - 100, top: height/2 - 240, width: 200, height: 200, borderRadius: 200, borderWidth: 2, borderColor: "rgba(116, 221, 226, 1.00)" }}></View>
 
           {/* Users */}
           {Images}
 
-          <View style={{width: 140, zIndex: 10, borderColor: "#bbb", borderWidth: 4, backgroundColor: "#fff", height: 140, top: height/2-170, position: "absolute", left: width/2 - 70, marginTop: 10, borderRadius: 100}}>
+          <View style={{width: 140, zIndex: 10, borderColor: "#bbb", borderWidth: 4, backgroundColor: "#fff", height: 140, top: height/2-220, position: "absolute", left: width/2 - 70, marginTop: 10, borderRadius: 100}}>
             {(() => {
               if (this.props.user.pic) {
                 return (
@@ -104,7 +108,7 @@ class PulsePageComponent extends Component {
               } else {
                 return (
                   <View style={{ alignItems: "center" }}>
-                    <Image source={require("../images/fa-user.png")} style={{marginTop: 40, width: 50, height: 55}} />
+                    <Image source={require("../images/fa-userBig.png")} style={{marginTop: 40, width: 50, height: 55}} />
                   </View>
                 )
               }
@@ -113,9 +117,11 @@ class PulsePageComponent extends Component {
         </View>
 
         {/* Footer */}
-        <View style={{flex: 0, backgroundColor: "#eee", height: 85, alignItems: "center", justifyContent: "center", flexDirection: "row"}}>
-          <AppText style={{fontFamily: "Lato-Bold", textAlign: "center"}}>Tap Connection to say Hello!</AppText>
+        <View style={{flex: 0, height: 118, alignItems: "center", backgroundColor: "#eee", paddingTop: 15, flexDirection: "column"}}>
+          <AppText style={{ fontSize: 17, fontFamily: "Lato-Bold", color: "#000", textAlign: "center"}}>Profession Filter ({this.props.users.length}):</AppText>
+          <Image style={{marginTop: 10}} source={require("../images/dropdown.png")} />
         </View>
+
         <Footer router={this.props.router} />
       </View>
     )

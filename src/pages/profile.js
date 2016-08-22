@@ -41,7 +41,7 @@ class ProfileComponent extends Component {
   render() {
 
     return (
-      <LinearGradient colors={[colors.primary, '#F9645E']} style={[styles.container, styles.flexColumn]}>
+      <View style={[styles.container, styles.flexColumn]}>
         <TouchableHighlight
           activeOpacity={.9}
           underlayColor="#eee"
@@ -57,7 +57,7 @@ class ProfileComponent extends Component {
               } else {
                 return (
                   <View style={{ alignItems: "center" }}>
-                    <Image source={require("../images/fa-user.png")} style={{marginTop: 40, width: 50, height: 55}} />
+                    <Image source={require("../images/fa-userBig.png")} style={{marginTop: 30, width: 50, height: 55}} />
                     <AppText style={{marginTop: 15, fontSize: 17, color: "#aaa"}}>Add Photo</AppText>
                   </View>
                 )
@@ -123,8 +123,9 @@ class ProfileComponent extends Component {
             style={{padding: 10, backgroundColor: "rgba(155, 155, 155, 1.00)", width: 40, height: 40, borderRadius: 8 }}
             onPress={() => this.showCamera() }
           >
-          <Image source={require("../images/fa-twitter.png")} />
+            <Image source={require("../images/fa-twitter.png")} />
           </TouchableHighlight>
+          <Image style={{marginLeft: 18}} source={require("../images/dropdown.png")} />
         </View>
 
         {/* Footer */}
@@ -132,7 +133,7 @@ class ProfileComponent extends Component {
           <Footer router={this.props.router} />
         </View>
 
-      </LinearGradient>
+      </View>
     )
   }
 }

@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 export { AppText } from "./appText";
 
 export const colors = {
-  primary: "#f4514a"
+  primary: "rgba(70, 184, 189, 1.00)"
 }
 
 export const styles = StyleSheet.create({

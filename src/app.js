@@ -17,6 +17,7 @@ class App extends Component {
   }
   componentDidMount() {
     processes.User.init();
+    processes.Pulse.init();
     this.setState({
       ready: true
     });
@@ -26,7 +27,7 @@ class App extends Component {
       return (
         <Provider store={store}>
           <View style={{flex: 1}}>
-            <StatusBar backgroundColor={colors.primary} />
+            <StatusBar />
             <Router />
           </View>
         </Provider>

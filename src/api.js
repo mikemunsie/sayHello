@@ -62,7 +62,7 @@ class Api extends EventEmitter {
 	getUser(userId) {
 		return usersRef.child(userId).once('value').then((snapshot) =>  {
 			const user = snapshot.val()
-			user[id] = userId
+			user.id = userId;
 			return user
 		})
 	}
@@ -73,7 +73,7 @@ class Api extends EventEmitter {
 
 	updateMyUser(user) {
 		user['id'] = this.currentUserId
-		return this.myRef.update(getUserData_(user))
+		return this.myRef.update(this.getUserData_(user))
 	}
 
 	getUserData_(user) {
@@ -93,7 +93,7 @@ class Api extends EventEmitter {
 	}
 
 	pulseMyLocation(lat, long) {
-		pulse(lat, long)
+		this.pulse(lat, long)
 	}
 
 	pulse(lat, long, userId) {
@@ -158,7 +158,9 @@ class Api extends EventEmitter {
 	}
 
 	getUsersInArea() {
-		var users = _.values(this.usersInArea)
+		var users = _.values(this.usersInArea);
+
+		if (users.length === 0) return [];
 
 		// filter empty objects
 		_.remove(users, (user) => {
@@ -167,13 +169,13 @@ class Api extends EventEmitter {
 
 		// calculate ranges and convert to ring range
 		const oldMax = _.maxBy(users, (user) => {
-			return user.distance
-		}).distance
+			return user.distance || 0;
+		}).distance || 0;
 
 
 		const oldMin = _.minBy(users, (user) => {
-			return user.distance
-		}).distance
+			return user.distance || 0;
+		}).distance || 0;
 
 		const oldRange = oldMax - oldMin
 		const newRange = 2
@@ -194,7 +196,7 @@ class Api extends EventEmitter {
 	// ########  request/accept api
 	requestContact(userId) {
 		this.getCurrentUser().then((user) => {
-			this.pendingsRef.child(userId).set(user)	
+			this.pendingsRef.child(userId).set(user)
 		})
 	}
 

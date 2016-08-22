@@ -1,17 +1,18 @@
 import Api from "./api";
 import * as UserActions from "./actions/user";
+import * as PulseActions from "./actions/pulse";
 import { defaultState as defaultUser } from "./reducers/user";
 
 class PulseClass {
-  constructor() {
-
+  init() {
+    this.GPSWatch();
+  }
+  GPSWatch() {
+    Api.pulseMyLocation(32.7795921, -96.8080133);
   }
 }
 
 class UserClass {
-  constructor() {
-
-  }
   init() {
     let userId = Api.createUser(defaultUser).key;
     Api.setCurrentUserId(userId);
@@ -19,5 +20,5 @@ class UserClass {
   }
 }
 
-export const Pules = new PulseClass;
+export const Pulse = new PulseClass;
 export const User = new UserClass;

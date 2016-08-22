@@ -8,15 +8,16 @@ export class Footer extends Component {
     super(props);
   }
   render() {
+
     return (
-      <View style={{flex: 0, height: 70}}>
+      <View style={{flex: 0, height: 68}}>
         <TouchableHighlight
           activeOpacity={.9}
           underlayColor="#eee"
           style={{position: "absolute", left: 30, marginTop: 20 }}
           onPress={() => this.props.router.changeRoute("profile") }
         >
-          <Image style={{height: 30, width: 30}} source={require("../images/fa-user.png")} />
+          <Image style={{height: 33, width: 30}} source={require("../images/fa-user.png")} />
         </TouchableHighlight>
         <TouchableHighlight
           activeOpacity={.9}

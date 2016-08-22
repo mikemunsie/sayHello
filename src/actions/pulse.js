@@ -9,8 +9,8 @@ function receivePulse(users) {
   }
 }
 
-export function sendPulse(pulse) {
+export function receiveUsers(users) {
   return (dispatch) => {
-    Api.createUser(user).then(() => dispatch(receiveProfile(user)));
-  };
+    dispatch(receivePulse(users));
+  }
 }

@@ -3,8 +3,6 @@ import Api from "../api";
 export const USER_PROFILE_UPDATED = 'USER_PROFILE_UPDATED';
 
 function receiveProfile(user) {
-  console.log("Dispatched")
-  console.log(user)
   return {
     type: USER_PROFILE_UPDATED,
     user
